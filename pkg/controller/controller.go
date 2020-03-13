@@ -84,6 +84,7 @@ func NewController(
 	clusterServiceClassInformer informers.ClusterServiceClassInformer,
 	serviceClassInformer informers.ServiceClassInformer,
 	instanceInformer informers.ServiceInstanceInformer,
+	extensionRequestInformer informers.ExtensionRequestInformer,
 	bindingInformer informers.ServiceBindingInformer,
 	clusterServicePlanInformer informers.ClusterServicePlanInformer,
 	servicePlanInformer informers.ServicePlanInformer,
@@ -113,6 +114,7 @@ func NewController(
 		clusterServicePlanQueue:     workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "cluster-service-plan"),
 		servicePlanQueue:            workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "service-plan"),
 		instanceQueue:               workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "service-instance"),
+		extensionRequestQueue:               workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "extension-request"),
 		bindingQueue:                workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "service-binding"),
 		instancePollingQueue:        workqueue.NewNamedRateLimitingQueue(workqueue.NewItemExponentialFailureRateLimiter(pollingStartInterval, operationPollingMaximumBackoffDuration), "instance-poller"),
 		bindingPollingQueue:         workqueue.NewNamedRateLimitingQueue(workqueue.NewItemExponentialFailureRateLimiter(pollingStartInterval, operationPollingMaximumBackoffDuration), "binding-poller"),
@@ -148,6 +150,13 @@ func NewController(
 		AddFunc:    controller.instanceAdd,
 		UpdateFunc: controller.instanceUpdate,
 		DeleteFunc: controller.instanceDelete,
+	})
+
+	controller.extensionRequestLister = extensionRequestInformer.Lister()
+	extensionRequestInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
+		AddFunc:    controller.extensionRequestAdd,
+		UpdateFunc: controller.extensionRequestUpdate,
+		DeleteFunc: controller.extensionRequestDelete,
 	})
 
 	controller.bindingLister = bindingInformer.Lister()
@@ -201,6 +210,7 @@ type controller struct {
 	clusterServiceClassLister   listers.ClusterServiceClassLister
 	serviceClassLister          listers.ServiceClassLister
 	instanceLister              listers.ServiceInstanceLister
+	extensionRequestLister 		listers.ExtensionRequestLister
 	bindingLister               listers.ServiceBindingLister
 	clusterServicePlanLister    listers.ClusterServicePlanLister
 	servicePlanLister           listers.ServicePlanLister
@@ -217,6 +227,7 @@ type controller struct {
 	clusterServicePlanQueue     workqueue.RateLimitingInterface
 	servicePlanQueue            workqueue.RateLimitingInterface
 	instanceQueue               workqueue.RateLimitingInterface
+	extensionRequestQueue 		workqueue.RateLimitingInterface
 	bindingQueue                workqueue.RateLimitingInterface
 	instancePollingQueue        workqueue.RateLimitingInterface
 	bindingPollingQueue         workqueue.RateLimitingInterface
@@ -255,6 +266,7 @@ func (c *controller) Run(workers int, stopCh <-chan struct{}) {
 		createWorker(c.clusterServiceClassQueue, "ClusterServiceClass", maxRetries, true, c.reconcileClusterServiceClassKey, stopCh, &waitGroup)
 		createWorker(c.clusterServicePlanQueue, "ClusterServicePlan", maxRetries, true, c.reconcileClusterServicePlanKey, stopCh, &waitGroup)
 		createWorker(c.instanceQueue, "ServiceInstance", maxRetries, true, c.reconcileServiceInstanceKey, stopCh, &waitGroup)
+		createWorker(c.extensionRequestQueue, "ExtensionRequest", maxRetries, true, c.reconcileExtensionRequestKey, stopCh, &waitGroup)
 		createWorker(c.bindingQueue, "ServiceBinding", maxRetries, true, c.reconcileServiceBindingKey, stopCh, &waitGroup)
 		createWorker(c.instancePollingQueue, "InstancePoller", maxRetries, false, c.requeueServiceInstanceForPoll, stopCh, &waitGroup)
 
@@ -286,6 +298,7 @@ func (c *controller) Run(workers int, stopCh <-chan struct{}) {
 	c.clusterServiceClassQueue.ShutDown()
 	c.clusterServicePlanQueue.ShutDown()
 	c.instanceQueue.ShutDown()
+	c.extensionRequestQueue.ShutDown()
 	c.bindingQueue.ShutDown()
 	c.instancePollingQueue.ShutDown()
 	c.bindingPollingQueue.ShutDown()
