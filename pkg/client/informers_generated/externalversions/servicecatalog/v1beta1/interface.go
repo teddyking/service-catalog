@@ -30,6 +30,8 @@ type Interface interface {
 	ClusterServiceClasses() ClusterServiceClassInformer
 	// ClusterServicePlans returns a ClusterServicePlanInformer.
 	ClusterServicePlans() ClusterServicePlanInformer
+	// ExtensionRequests returns a ExtensionRequestInformer.
+	ExtensionRequests() ExtensionRequestInformer
 	// ServiceBindings returns a ServiceBindingInformer.
 	ServiceBindings() ServiceBindingInformer
 	// ServiceBrokers returns a ServiceBrokerInformer.
@@ -66,6 +68,11 @@ func (v *version) ClusterServiceClasses() ClusterServiceClassInformer {
 // ClusterServicePlans returns a ClusterServicePlanInformer.
 func (v *version) ClusterServicePlans() ClusterServicePlanInformer {
 	return &clusterServicePlanInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// ExtensionRequests returns a ExtensionRequestInformer.
+func (v *version) ExtensionRequests() ExtensionRequestInformer {
+	return &extensionRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ServiceBindings returns a ServiceBindingInformer.

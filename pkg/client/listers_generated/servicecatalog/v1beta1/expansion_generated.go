@@ -30,6 +30,14 @@ type ClusterServiceClassListerExpansion interface{}
 // ClusterServicePlanLister.
 type ClusterServicePlanListerExpansion interface{}
 
+// ExtensionRequestListerExpansion allows custom methods to be added to
+// ExtensionRequestLister.
+type ExtensionRequestListerExpansion interface{}
+
+// ExtensionRequestNamespaceListerExpansion allows custom methods to be added to
+// ExtensionRequestNamespaceLister.
+type ExtensionRequestNamespaceListerExpansion interface{}
+
 // ServiceBindingListerExpansion allows custom methods to be added to
 // ServiceBindingLister.
 type ServiceBindingListerExpansion interface{}

@@ -58,6 +58,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.CommonServiceClassStatus":       schema_pkg_apis_servicecatalog_v1beta1_CommonServiceClassStatus(ref),
 		"github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.CommonServicePlanSpec":          schema_pkg_apis_servicecatalog_v1beta1_CommonServicePlanSpec(ref),
 		"github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.CommonServicePlanStatus":        schema_pkg_apis_servicecatalog_v1beta1_CommonServicePlanStatus(ref),
+		"github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.ExtensionRequest":               schema_pkg_apis_servicecatalog_v1beta1_ExtensionRequest(ref),
+		"github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.ExtensionRequestList":           schema_pkg_apis_servicecatalog_v1beta1_ExtensionRequestList(ref),
+		"github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.ExtensionRequestSpec":           schema_pkg_apis_servicecatalog_v1beta1_ExtensionRequestSpec(ref),
+		"github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.ExtensionRequestStatus":         schema_pkg_apis_servicecatalog_v1beta1_ExtensionRequestStatus(ref),
 		"github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.LocalObjectReference":           schema_pkg_apis_servicecatalog_v1beta1_LocalObjectReference(ref),
 		"github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.ObjectReference":                schema_pkg_apis_servicecatalog_v1beta1_ObjectReference(ref),
 		"github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.ParametersFromSource":           schema_pkg_apis_servicecatalog_v1beta1_ParametersFromSource(ref),
@@ -1592,6 +1596,133 @@ func schema_pkg_apis_servicecatalog_v1beta1_CommonServicePlanStatus(ref common.R
 					},
 				},
 				Required: []string{"removedFromBrokerCatalog"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_servicecatalog_v1beta1_ExtensionRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.ExtensionRequestSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.ExtensionRequestStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.ExtensionRequestSpec", "github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.ExtensionRequestStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_pkg_apis_servicecatalog_v1beta1_ExtensionRequestList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.ExtensionRequest"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/kubernetes-sigs/service-catalog/pkg/apis/servicecatalog/v1beta1.ExtensionRequest", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_pkg_apis_servicecatalog_v1beta1_ExtensionRequestSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_servicecatalog_v1beta1_ExtensionRequestStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"completed": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"completed"},
 			},
 		},
 	}

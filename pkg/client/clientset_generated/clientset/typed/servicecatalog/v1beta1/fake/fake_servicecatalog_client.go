@@ -40,6 +40,10 @@ func (c *FakeServicecatalogV1beta1) ClusterServicePlans() v1beta1.ClusterService
 	return &FakeClusterServicePlans{c}
 }
 
+func (c *FakeServicecatalogV1beta1) ExtensionRequests(namespace string) v1beta1.ExtensionRequestInterface {
+	return &FakeExtensionRequests{c, namespace}
+}
+
 func (c *FakeServicecatalogV1beta1) ServiceBindings(namespace string) v1beta1.ServiceBindingInterface {
 	return &FakeServiceBindings{c, namespace}
 }

@@ -45,6 +45,38 @@ type ClusterServiceBroker struct {
 	Status ClusterServiceBrokerStatus `json:"status,omitempty"`
 }
 
+// +genclient
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type ExtensionRequest struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	// +optional
+	Spec ExtensionRequestSpec `json:"spec,omitempty"`
+
+	// +optional
+	Status ExtensionRequestStatus `json:"status,omitempty"`
+}
+
+type ExtensionRequestSpec struct {
+	Name string `json:"name"`
+}
+
+type ExtensionRequestStatus struct {
+	Completed bool `json:"completed"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+type ExtensionRequestList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+
+	Items []ExtensionRequest `json:"items"`
+}
+
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ClusterServiceBrokerList is a list of Brokers.
